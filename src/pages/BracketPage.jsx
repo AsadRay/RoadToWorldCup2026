@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { GROUPS, R32_PAIRS, R16_PAIRS, QF_PAIRS, SF_PAIRS } from "../data/tournament";
+import { R32_PAIRS, R16_PAIRS, QF_PAIRS, SF_PAIRS } from "../data/tournament";
 import { useBracket } from "../context/BracketContext";
 import BracketSidebar from "../components/BracketSidebar";
 import MatchCard from "../components/MatchCard";
