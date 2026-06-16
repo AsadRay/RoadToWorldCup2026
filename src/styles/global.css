@@ -465,6 +465,8 @@ body {
   font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s;
 }
 .pred-watch-btn:hover { background: var(--pitch-dark); }
+.pred-watch-btn.unavailable { background: var(--surface-3); color: var(--ink-4); cursor: not-allowed; }
+.pred-watch-btn.unavailable:hover { background: var(--surface-3); transform: none; }
 
 /* ── TOAST ── */
 .toast {

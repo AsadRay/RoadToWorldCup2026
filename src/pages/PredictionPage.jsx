@@ -40,7 +40,14 @@ function highlightsUrl(t1name, t2name) {
   return `https://www.youtube.com/results?search_query=${q}`;
 }
 
-function MatchStats({ t1, t2, isFinished }) {
+function isMatchToday(date) {
+  const t = new Date();
+  const [y, m, d] = date.split("-").map(Number);
+  return t.getFullYear() === y && t.getMonth() + 1 === m && t.getDate() === d;
+}
+
+// watchState: "highlights" | "live" | "upcoming"
+function MatchStats({ t1, t2, watchState }) {
   const prob = calcProb(t1.r, t2.r);
   const s1 = TEAM_STATS[t1.n] || { attack: 60, defense: 60, form: "DDDDD", players: [] };
   const s2 = TEAM_STATS[t2.n] || { attack: 60, defense: 60, form: "DDDDD", players: [] };
@@ -107,13 +114,14 @@ function MatchStats({ t1, t2, isFinished }) {
       </div>
 
       <button
-        className="pred-watch-btn"
+        className={`pred-watch-btn${watchState === "upcoming" ? " unavailable" : ""}`}
+        disabled={watchState === "upcoming"}
         onClick={(e) => {
           e.stopPropagation();
-          window.open(isFinished ? highlightsUrl(t1.n, t2.n) : LIVE_URL, "_blank", "noopener,noreferrer");
+          window.open(watchState === "highlights" ? highlightsUrl(t1.n, t2.n) : LIVE_URL, "_blank", "noopener,noreferrer");
         }}
       >
-        {isFinished ? "Watch Highlights →" : "Watch Live →"}
+        {watchState === "highlights" ? "Watch Highlights →" : watchState === "live" ? "Watch Live →" : "Watch Live Available on Match Day"}
       </button>
     </div>
   );
@@ -148,6 +156,8 @@ function MatchCard({ match, getScore }) {
     scoreData.home !== null;
 
   const isFinished = scoreData?.status === "FINISHED" || localStatus === "FT";
+  const isLive = scoreData?.status === "IN_PLAY" || scoreData?.status === "PAUSED" || localStatus === "LIVE";
+  const watchState = isFinished ? "highlights" : (isLive || isMatchToday(match.date)) ? "live" : "upcoming";
 
   return (
     <div className={`pred-match${open ? " expanded" : ""}`} onClick={() => setOpen((v) => !v)}>
@@ -180,7 +190,7 @@ function MatchCard({ match, getScore }) {
           </div>
         </div>
       </div>
-      {open && <MatchStats t1={match.t1} t2={match.t2} isFinished={isFinished} />}
+      {open && <MatchStats t1={match.t1} t2={match.t2} watchState={watchState} />}
     </div>
   );
 }
