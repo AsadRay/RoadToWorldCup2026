@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { GROUPS } from "../data/tournament";
 
+const isProd = process.env.NODE_ENV === "production";
+
 function buildFallback() {
   const map = {};
   GROUPS.forEach((g) => {
@@ -22,12 +24,15 @@ export function useGroupStandings() {
   const apiKey = process.env.REACT_APP_FD_API_KEY;
 
   const fetchStandings = useCallback(async () => {
-    if (!apiKey) return;
+    if (!isProd && !apiKey) return;
     setLoading(true);
     try {
-      const res = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
-        headers: { "X-Auth-Token": apiKey },
-      });
+      const url = isProd
+        ? "/api/standings"
+        : "https://api.football-data.org/v4/competitions/WC/standings";
+      const headers = isProd ? {} : { "X-Auth-Token": apiKey };
+
+      const res = await fetch(url, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { standings: raw } = await res.json();
 
@@ -50,5 +55,5 @@ export function useGroupStandings() {
     return () => clearInterval(id);
   }, [fetchStandings]);
 
-  return { standings, loading, hasApi: !!apiKey, error };
+  return { standings, loading, hasApi: isProd || !!apiKey, error };
 }
