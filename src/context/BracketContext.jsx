@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { GROUPS, T_MATCH_INDICES, R16_PAIRS, QF_PAIRS, SF_PAIRS } from "../data/tournament";
 
-const BracketContext = createContext(null);
+export const BracketContext = createContext(null);
 
 export function BracketProvider({ children }) {
   const [gW, setGW] = useState({});   // group winners: { A: team, ... }

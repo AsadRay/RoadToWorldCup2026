@@ -69,7 +69,7 @@ export default function GroupsPage() {
       <div className="sec-header">
         <h2>12 Groups · 48 Teams</h2>
         <div className="hint-pill">
-          Click once for 1st place · click again for 2nd · click to remove
+          Click 1st for Group Champion · click again for Runners up · click to remove
         </div>
       </div>
       <div className="groups-grid">

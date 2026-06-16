@@ -1,13 +1,16 @@
 import { useLocation } from "react-router-dom";
 
 const STEPS = [
-  { path: "/", label: "Pick group standings" },
+  { path: "/build", label: "Pick group standings" },
   { path: "/thirds", label: "See best 3rd-place teams" },
   { path: "/bracket", label: "Fill the bracket" },
 ];
 
+const BUILDER_PATHS = new Set(["/build", "/thirds", "/bracket"]);
+
 export default function Hero() {
   const { pathname } = useLocation();
+  if (!BUILDER_PATHS.has(pathname)) return null;
   const currentIdx = STEPS.findIndex((s) => s.path === pathname);
 
   return (
