@@ -12,7 +12,7 @@ export function useLiveScores() {
       // Relative URL — CRA dev proxy forwards to https://api.football-data.org
       // This bypasses the CORS restriction (api only allows Origin: http://localhost, not :3000)
       const res = await fetch(
-        "/v4/competitions/WC/matches?stage=GROUP_STAGE",
+        "https://api.football-data.org/v4/competitions/WC/matches?stage=GROUP_STAGE",
         { headers: { "X-Auth-Token": apiKey } }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

@@ -25,7 +25,7 @@ export function useGroupStandings() {
     if (!apiKey) return;
     setLoading(true);
     try {
-      const res = await fetch("/v4/competitions/WC/standings", {
+      const res = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
         headers: { "X-Auth-Token": apiKey },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
