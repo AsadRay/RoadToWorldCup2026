@@ -40,12 +40,6 @@ function highlightsUrl(t1name, t2name) {
   return `https://www.youtube.com/results?search_query=${q}`;
 }
 
-function isMatchToday(date) {
-  const t = new Date();
-  const [y, m, d] = date.split("-").map(Number);
-  return t.getFullYear() === y && t.getMonth() + 1 === m && t.getDate() === d;
-}
-
 // watchState: "highlights" | "live" | "upcoming"
 function MatchStats({ t1, t2, watchState }) {
   const prob = calcProb(t1.r, t2.r);
@@ -157,7 +151,7 @@ function MatchCard({ match, getScore }) {
 
   const isFinished = scoreData?.status === "FINISHED" || localStatus === "FT";
   const isLive = scoreData?.status === "IN_PLAY" || scoreData?.status === "PAUSED" || localStatus === "LIVE";
-  const watchState = isFinished ? "highlights" : (isLive || isMatchToday(match.date)) ? "live" : "upcoming";
+  const watchState = isFinished ? "highlights" : isLive ? "live" : "upcoming";
 
   return (
     <div className={`pred-match${open ? " expanded" : ""}`} onClick={() => setOpen((v) => !v)}>
