@@ -7,9 +7,10 @@ import { useLiveScores } from "../hooks/useLiveScores";
 function getLocalStatus(date, time) {
   const dt = new Date(`${date}T${time}:00Z`);
   const now = new Date();
-  const diff = (now - dt) / 3_600_000; // positive = minutes after kickoff
-  if (diff > 2) return "FT";           // more than 2 hours after kickoff
-  if (diff > -2) return "LIVE";        // within 2-hour window around kickoff
+  const diff = (now - dt) / 3_600_000; // positive = after kickoff
+  if (diff > 2)  return "FT";          // more than 2 hours after kickoff
+  if (diff >= 0) return "LIVE";        // kicked off, match in progress
+  if (diff > -2) return "SOON";        // kicks off within 2 hours
   return null;
 }
 
@@ -153,7 +154,7 @@ function MatchCard({ match, getScore }) {
     scoreData.home !== null;
 
   const isFinished = scoreData?.status === "FINISHED" || localStatus === "FT";
-  const isLive = scoreData?.status === "IN_PLAY" || scoreData?.status === "PAUSED" || localStatus === "LIVE";
+  const isLive = scoreData?.status === "IN_PLAY" || scoreData?.status === "PAUSED" || localStatus === "LIVE" || localStatus === "SOON";
   const watchState = isFinished ? "highlights" : isLive ? "live" : "upcoming";
 
   return (
