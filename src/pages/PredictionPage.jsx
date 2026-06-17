@@ -4,12 +4,11 @@ import { GROUP_MATCHES } from "../data/matches";
 import { TEAM_STATS } from "../data/teamStats";
 import { useLiveScores } from "../hooks/useLiveScores";
 
-const TODAY = new Date();
-
 function getLocalStatus(date, time) {
-  const dt = new Date(`${date}T${time}:00`);
-  if (dt < TODAY) return "FT";
-  if ((dt - TODAY) / 3_600_000 < 2) return "LIVE";
+  const dt = new Date(`${date}T${time}:00Z`);
+  const now = new Date();
+  if (dt < now) return "FT";
+  if ((dt - now) / 3_600_000 < 2) return "LIVE";
   return null;
 }
 
@@ -137,7 +136,10 @@ function ScoreBadge({ scoreData, localStatus, date, time }) {
   if (localStatus === "LIVE") return <span className="pred-status live">● LIVE</span>;
   if (localStatus === "FT")   return <span className="pred-status ft">FT</span>;
   const label = new Date(date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  return <span className="pred-status upcoming">{label} · {time} UTC</span>;
+  const bdTime = new Date(`${date}T${time}:00Z`).toLocaleTimeString("en-US", {
+    hour: "2-digit", minute: "2-digit", timeZone: "Asia/Dhaka", hour12: true,
+  });
+  return <span className="pred-status upcoming">{label} · {bdTime} BD</span>;
 }
 
 function MatchCard({ match, getScore }) {
