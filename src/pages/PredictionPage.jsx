@@ -7,8 +7,9 @@ import { useLiveScores } from "../hooks/useLiveScores";
 function getLocalStatus(date, time) {
   const dt = new Date(`${date}T${time}:00Z`);
   const now = new Date();
-  if (dt < now) return "FT";
-  if ((dt - now) / 3_600_000 < 2) return "LIVE";
+  const diff = (now - dt) / 3_600_000; // positive = minutes after kickoff
+  if (diff > 2) return "FT";           // more than 2 hours after kickoff
+  if (diff > -2) return "LIVE";        // within 2-hour window around kickoff
   return null;
 }
 
